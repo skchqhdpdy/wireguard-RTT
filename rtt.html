@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta property="og:title" content="RTT | vpn.aodd.xyz">
+    <meta property="og:description" content="vpn.aodd.xyz">
+    <meta property="og:image" content="https://vpn.aodd.xyz/img/favicon.png">
+    <meta property="og:url" content="https://vpn.aodd.xyz">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="RTT">
+    <meta property="og:locale" content="ko_KR">
+    <title>RTT | vpn.aodd.xyz</title>
+    <link rel="icon" href="https://vpn.aodd.xyz/img/favicon.png" type="image/png">
+</head>
+<body>
+    <div style="text-align: center; color: #4A90E2;">
+        <h1>TCP</h1>
+        <h1 class="RTT">Request Time : ? (?)</h1>
+        <h1 class="RTT">VPN Server Host : ?</h1>
+        <h1 class="RTT">VPN Server IP : ?</h1>
+        <h1 class="RTT">Your IP : ?</h1>
+        <h1 class="RTT">You --> VPN Server : ?ms</h1>
+        <h1 class="RTT">You --> VPN Server --> You (RTT) : ?ms</h1>
+    </div>
+    <br><br><br><br>
+    <div style="text-align: center; color: #4A90E2;">
+        <h1>UDP</h1>
+        <h1>?</h1>
+    </div>
+
+    <script>
+        setInterval(() => {
+            const st = Date.now();
+            const requestOptions = {
+                method: "POST",
+                headers: {
+                    "unixTime": st / 1000
+                }
+            };
+
+            fetch(window.location.href, requestOptions)
+                .then(response => response.json())
+                .then(res => {
+                    const RTT = Date.now() - st;
+                    console.log(`st = ${Math.round(st / 1000)} | ServerRTT = ${res["RTT"]} | RTT = ${RTT} | ServerIP = ${res["ServerIP"]} | ClientIP = ${res["ClientIP"]}`);
+
+                    const txt = document.getElementsByClassName("RTT");
+                    txt[0].innerText = `Request Time : ${new Date(st).toLocaleString()} (${Math.round(st / 1000)})`;
+                    txt[1].innerText = `VPN Server Host : ${res["host"]}`;
+                    txt[2].innerText = `VPN Server IP : ${res["ServerIP"]}`;
+                    txt[3].innerText = `Your IP : ${res["ClientIP"]}`;
+                    txt[4].innerText = `You --> VPN Server : ${res["RTT"]}ms`;
+                    txt[5].innerText = `You --> VPN Server --> You (RTT) : ${RTT}ms`;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }, 1000);
+    </script>
+</body>
+</html>

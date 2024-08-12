@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta property="og:title" content="Bench | bench.vpn.aodd.xyz">
+    <meta property="og:description" content="Bench All VPN's">
+    <meta property="og:image" content="https://vpn.aodd.xyz/img/favicon.png">
+    <meta property="og:url" content="https://bench.vpn.aodd.xyz">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Bench">
+    <meta property="og:locale" content="ko_KR">
+    <title>Bench | bench.vpn.aodd.xyz</title>
+    <link rel="icon" href="https://vpn.aodd.xyz/img/favicon.png" type="image/png">
+</head>
+<body>
+    <div style="text-align: center; color: #4A90E2;">
+        <h1>TCP</h1>
+        <h1 id="resTime">Request Time : ? (?)</h1>
+        <h1 id="ClientIP">Your IP : ?</h1>
+        <h1 id="main">main | vpn.aodd.xyz : ?ms</h1>
+        <h1 id="aws-osaka">osaka | aws-osaka.vpn.aodd.xyz : ?ms</h1>
+        <h1 id="gcore-tokyo">tokyo | gcore-tokyo.vpn.aodd.xyz : ?ms</h1>
+    </div>
+    <br><br><br><br>
+    <div style="text-align: center; color: #4A90E2;">
+        <h1>UDP</h1>
+        <h1>?</h1>
+    </div>
+
+    <script>
+        document.getElementById("main").addEventListener("click", () => {window.open("https://vpn.aodd.xyz/rtt", '_blank')});
+        document.getElementById("aws-osaka").addEventListener("click", () => {window.open("https://aws-osaka.vpn.aodd.xyz/rtt", '_blank')});
+        document.getElementById("gcore-tokyo").addEventListener("click", () => {window.open("https://gcore-tokyo.vpn.aodd.xyz/rtt", '_blank')});
+
+        setInterval(() => {
+            const bst = Date.now();
+            document.getElementById("resTime").innerText = `Request Time : ${new Date(bst).toLocaleString()} (${Math.round(bst / 1000)})`;
+
+            async function main() {
+                const st = Date.now();
+                const requestOptions = {
+                    method: "POST",
+                    headers: {
+                        "unixTime": st / 1000
+                    }
+                };
+
+                let res = await fetch("https://vpn.aodd.xyz/rtt", requestOptions);
+                res = await res.json();
+                const RTT = Date.now() - st;
+                document.getElementById("main").innerText = `main | vpn.aodd.xyz : ${RTT}ms`
+                document.getElementById("main").
+                document.getElementById("ClientIP").innerText = `Your IP : ${res["ClientIP"]}`;
+            }
+
+            async function osaka() {
+                const st = Date.now();
+                const requestOptions = {
+                    method: "POST",
+                    headers: {
+                        "unixTime": st / 1000
+                    }
+                };
+
+                let res = await fetch("https://aws-osaka.vpn.aodd.xyz/rtt", requestOptions);
+                res = await res.json();
+                const RTT = Date.now() - st;
+                document.getElementById("aws-osaka").innerText = `osaka | aws-osaka.vpn.aodd.xyz : ${RTT}ms`
+                document.getElementById("ClientIP").innerText = `Your IP : ${res["ClientIP"]}`;
+            }
+
+            async function tokyo() {
+                const st = Date.now();
+                const requestOptions = {
+                    method: "POST",
+                    headers: {
+                        "unixTime": st / 1000
+                    }
+                };
+
+                let res = await fetch("https://gcore-tokyo.vpn.aodd.xyz/rtt", requestOptions);
+                res = await res.json();
+                const RTT = Date.now() - st;
+                document.getElementById("gcore-tokyo").innerText = `tokyo | gcore-tokyo.vpn.aodd.xyz : ${RTT}ms`
+                document.getElementById("ClientIP").innerText = `Your IP : ${res["ClientIP"]}`;
+            }
+
+            main(); osaka(); tokyo()
+        }, 1000);
+    </script>
+</body>
+</html>
